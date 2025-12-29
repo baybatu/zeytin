@@ -7,15 +7,15 @@ import java.util.List;
 
 public class ObjectProcessor {
 
-    private ZyStack stack;
+    private final ZyStack stack;
 
     public ObjectProcessor() {
         this.stack = new ZyStack();
     }
 
-    public void process(List<ZyObject> objects) {
+    public void process(List<ZyObject<?>> objects) {
         try {
-            for (ZyObject object : objects) {
+            for (ZyObject<?> object : objects) {
                 object.process(stack);
             }
         } catch (ZyError zh) {

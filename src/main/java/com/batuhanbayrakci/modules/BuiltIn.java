@@ -135,11 +135,9 @@ public class BuiltIn {
                     + "' tipleri arası işlemleri desteklemez", SourceMap.getLineOf(args.get(0)));
         } else {
             if (args.get(0).getClass().equals(ZyNumber.class)) {
-                // 0'a bölme var mı?
                 if ((Double) args.get(0).getValue() == 0) {
                     throw new ZyDivisionByZeroError("Payda '0' olamaz", SourceMap.getLineOf(args.get(0)));
                 }
-                // bir sorun yoksa işlem yap
                 return new ZyNumber((Double) args.get(1).getValue()
                         / (Double) args.get(0).getValue());
             } else {
@@ -199,7 +197,7 @@ public class BuiltIn {
         if (yazilacakNesne instanceof ZyString) {
             System.out.println(((ZyString) yazilacakNesne).print());
         }
-        System.out.println();
+        System.out.println(yazilacakNesne.toString());
         return new ZyEmpty();
     }
 
@@ -245,8 +243,6 @@ public class BuiltIn {
 
         ZyObject eklenecekNesne = arg.get(0);
         ZyName eklenecekIsim = (ZyName) arg.get(1);
-        // ismi cagirdigimda icindekiler calissin
-        eklenecekNesne.setExecutable(true);
         ZySymbolStack.INSTANCE.addName(eklenecekIsim, eklenecekNesne);
         return new ZyEmpty();
     }
@@ -275,8 +271,7 @@ public class BuiltIn {
     public static ZyObject calis(ZyStack stack) throws ZyError {
         ZyObject arg = stack.getArgument();
 
-        arg.setExecutable(true);
-        arg.process(stack);
+        arg.execute(stack);
         return new ZyEmpty();
     }
 
@@ -285,12 +280,12 @@ public class BuiltIn {
         return new ZyType(arg);
     }
 
-    public static ZyObject dogru(ZyStack stack) {
-        return new ZyBoolean(true);
+    public static void dogru(ZyStack stack) {
+        stack.add(new ZyBoolean(true));
     }
 
-    public static ZyObject yanlis(ZyStack stack) {
-        return new ZyBoolean(false);
+    public static void yanlis(ZyStack stack) {
+        stack.add(new ZyBoolean(false));
     }
 
     public static ZyObject esitlik(ZyStack stack)
@@ -303,14 +298,11 @@ public class BuiltIn {
         return new ZyBoolean(false);
     }
 
-    public static ZyObject kucukluk(ZyStack stack)
-        // <
-            throws ZyStackUnderflowError, ZyTypeError {
+    public static ZyObject kucukluk(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         List<ZyObject> arg = stack.getArgument(2);
 
         if (arg.get(1).getClass().isAssignableFrom(arg.get(0).getClass())) {
             if (arg.get(1) instanceof ZyNumber) {
-                // kontrol baslar
                 if ((Double) arg.get(1).getValue() < (Double) arg.get(0).getValue()) {
                     return new ZyBoolean(true);
                 } else {
@@ -327,14 +319,11 @@ public class BuiltIn {
         }
     }
 
-    public static ZyObject kucukEsitlik(ZyStack stack)
-        // <=
-            throws ZyStackUnderflowError, ZyTypeError {
+    public static ZyObject kucukEsitlik(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         List<ZyObject> arg = stack.getArgument(2);
 
         if (arg.get(1).getClass().isAssignableFrom(arg.get(0).getClass())) {
             if (arg.get(1) instanceof ZyNumber) {
-                // kontrol baslar
                 if ((Double) arg.get(1).getValue() <= (Double) arg.get(0).getValue()) {
                     return new ZyBoolean(true);
                 } else {
@@ -352,14 +341,11 @@ public class BuiltIn {
         }
     }
 
-    public static ZyObject buyukluk(ZyStack stack)
-        // >
-            throws ZyStackUnderflowError, ZyTypeError {
+    public static ZyObject buyukluk(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         List<ZyObject> arg = stack.getArgument(2);
 
         if (arg.get(1).getClass().isAssignableFrom(arg.get(0).getClass())) {
             if (arg.get(1) instanceof ZyNumber) {
-                // kontrol baslar
                 if ((Double) arg.get(1).getValue() > (Double) arg.get(0).getValue()) {
                     return new ZyBoolean(true);
                 } else {
@@ -376,14 +362,11 @@ public class BuiltIn {
         }
     }
 
-    public static ZyObject buyukEsitlik(ZyStack stack)
-        // >=
-            throws ZyStackUnderflowError, ZyTypeError {
+    public static ZyObject buyukEsitlik(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         List<ZyObject> arg = stack.getArgument(2);
 
         if (arg.get(1).getClass().isAssignableFrom(arg.get(0).getClass())) {
             if (arg.get(1) instanceof ZyNumber) {
-                // kontrol baslar
                 if ((Double) arg.get(1).getValue() >= (Double) arg.get(0).getValue()) {
                     return new ZyBoolean(true);
                 } else {
@@ -400,13 +383,12 @@ public class BuiltIn {
         }
     }
 
-    public static ZyObject kosul(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
-        // if yapısı
-
+    public static void kosul(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         /*
-         * 6 5 = { "esit" } { "esit degil" }
+         * if structure
+         * example 6 5 = { "esit" } { "esit degil" } eger
+         * <BOOL> <OBJ> <OBJ> eger
          *
-         * Önce koşul sonra yapılacaklar
          */
 
         List<ZyObject> arg = stack.getArgument(3);
@@ -421,21 +403,18 @@ public class BuiltIn {
         ZyObject yapilacakIkinci = arg.get(1);
 
         if (kosul.getValue()) {
-            yapilacakIkinci.setExecutable(true);
-            return yapilacakIkinci;
+            yapilacakIkinci.execute(stack);
         } else {
-            yapilacakIlk.setExecutable(true);
-            return yapilacakIlk;
+            yapilacakIlk.execute(stack);
         }
     }
 
-    public static ZyObject tekrarla(ZyStack stack) throws ZyError {
-        // dongu yapısı
-
+    public static void tekrarla(ZyStack stack) throws ZyError {
         /*
+         * loop
+         *
          * { "islem" } 6 tekrar
          *
-         * önce tekrarlanacak işlem, sonra tekrar sayısı
          */
 
         List<ZyObject> arg = stack.getArgument(2);
@@ -450,14 +429,11 @@ public class BuiltIn {
 
         if (tekrarSayisi.getValue() > 0) {
             for (int i = 0; i < tekrarSayisi.getValue(); i++) {
-                tekrarlanacak.setExecutable(true);
-                tekrarlanacak.process(stack);
+                tekrarlanacak.execute(stack);
             }
-            return new ZyEmpty();
         } else {
             throw new ZyError("Döngülerde tekrar sayısı pozitif olmalıdır.");
         }
-
     }
 
     public static ZyObject dizgeElemanCek(ZyStack stack)
@@ -489,10 +465,9 @@ public class BuiltIn {
         char c = ((String) tumDizge.getValue()).charAt(i_indis);
         ZyString eleman = new ZyString(Character.toString(c));
         return eleman;
-
     }
 
-    public static ZyObject uzunluk(ZyStack stack)
+    public static void uzunluk(ZyStack stack)
             throws ZyStackUnderflowError, ZyTypeError, ZyIndexBoundError {
         ZyObject arg = stack.getArgument();
 
@@ -501,18 +476,13 @@ public class BuiltIn {
                     + "' tipi, uzunluk hesabı için geçersiz argüman tipidir.", SourceMap.getLineOf(arg));
         }
 
-        ZyNumber uzunluk = null;
-
         if (arg instanceof ZyString) {
             ZyString tumDizge = (ZyString) arg;
-            uzunluk = new ZyNumber(tumDizge.length());
-        } else if (arg instanceof ZyList) {
+            stack.add(new ZyNumber(tumDizge.length()));
+        } else {
             ZyList liste = (ZyList) arg;
-            uzunluk = new ZyNumber(liste.size());
+            stack.add(new ZyNumber(liste.size()));
         }
-
-        return uzunluk;
-
     }
 
     public static ZyObject listeElemanCek(ZyStack stack)
@@ -624,23 +594,23 @@ public class BuiltIn {
      *                                                             bu hata fırlatılır. Örnek olarak {@code "54t"} gibi bir giriş, uygun bir
      *                                                             sayı formatı olmadığı için bu hata fırlatılır.
      */
-    public static ZyObject sayi(ZyStack stack)
+    public static void sayi(ZyStack stack)
             throws ZyStackUnderflowError, ZyTypeError, ZyValueError {
 
         ZyObject arg = stack.getArgument();
-        Double donusum = null;
+        Double donusum;
 
         if (arg instanceof ZyString) {
             try {
                 donusum = Double.parseDouble((String) arg.getValue());
-                return new ZyNumber(donusum);
+                stack.add(new ZyNumber(donusum));
             } catch (NumberFormatException nfe) {
                 throw new ZyValueError("Sayı biçimine uygun olmayan bir dizge kullanıldığından " +
                         "doğru dönüşüm yapılamaz: " + arg, SourceMap.getLineOf(arg));
             }
 
         } else if (arg instanceof ZyNumber) {
-            return (ZyNumber) arg;
+            stack.add(arg);
         } else {
             throw new ZyTypeError("sayı isminin çalışabilmesi için argümanın " +
                     "'sayı' veya 'dizge' tipinde olması gerekir. Mevcut type ise bir" +
@@ -672,15 +642,15 @@ public class BuiltIn {
      * @throws com.batuhanbayrakci.exception.ZyStackUnderflowError Yığında eleman yoksa
      *                                                             {@code YığınYetersizElemanHatası} tipinde bir hata döndürülür.
      */
-    public static ZyObject dizge(ZyStack stack)
+    public static void dizge(ZyStack stack)
             throws ZyStackUnderflowError {
 
-        ZyObject arg = stack.getArgument();
+        ZyObject<?> arg = stack.getArgument();
 
         if (arg instanceof ZyString) {
-            return new ZyString(((String) arg.getValue()));
+            stack.add(new ZyString(((String) arg.getValue())));
         }
-        return new ZyString(arg.toString());
+        stack.add(new ZyString(arg.toString()));
     }
 
     /**
@@ -749,7 +719,7 @@ public class BuiltIn {
      * <p>
      * Örnek: "batuhan" isim -> /batuhan oluşturulur ve yığına atılır.
      *
-     * @param Verilerin alınacağı yığın
+     * @param stack Verilerin alınacağı yığın
      * @return İşlem sonucu elde edilen değer, uygun bir {@link com.batuhanbayrakci.objects.ZyObject}
      * tipinde döndürülür. Bu durumda bu type sabit bir {@link com.batuhanbayrakci.objects.ZyName} olacaktır.
      * @throws com.batuhanbayrakci.exception.ZyStackUnderflowError Yığında eleman yoksa
@@ -763,7 +733,7 @@ public class BuiltIn {
         ZyObject arg = stack.getArgument();
 
         if (arg instanceof ZyString) {
-            return new ZyName((String) arg.getValue(), false);
+            return ZyName.createLiteral((String) arg.getValue());
         } else if (arg instanceof ZyName) {
             return arg;
         } else {
@@ -786,7 +756,7 @@ public class BuiltIn {
      * Fakat eğer çekilen argüman başka bir tipte ise o tipin dizge
      * gösterimi kullanılır.
      *
-     * @param Verilerin alınacağı yığın
+     * @param stack Verilerin alınacağı yığın
      * @return İşlem sonucu elde edilen değer, uygun
      * bir {@link com.batuhanbayrakci.objects.ZyObject} tipinde döndürülür. Bu durumda
      * bu type {@link com.batuhanbayrakci.objects.ZyList} olacaktır.
@@ -803,7 +773,7 @@ public class BuiltIn {
         if (arg instanceof ZyString) {
             char[] karakterler = ((String) arg.getValue()).toCharArray();
 
-            ArrayList<ZyObject> fff = new ArrayList<>();
+            var fff = new ArrayList<ZyObject<?>>();
             for (char c : karakterler) {
                 fff.add(new ZyString(Character.toString(c)));
             }
@@ -846,28 +816,19 @@ public class BuiltIn {
         ZyProcedure kosul = (ZyProcedure) arg.get(0);
         ZyObject tekrarlanacak = arg.get(1);
 
-        kosul.setExecutable(true);
-        kosul.process(stack);
+        kosul.execute(stack);
 
-        ZyObject kontrol = stack.getArgument();
+        ZyBoolean kontrol = stack.getBooleanArgument();
 
-        if (!(kontrol instanceof ZyNumber)) {
-            throw new ZyTypeError("type hatası", SourceMap.getLineOf(kontrol));
-        }
+        while (kontrol.getValue()) {
+            tekrarlanacak.execute(stack);
 
-        while (((ZyNumber) kontrol).getValue() > 0) {
-            tekrarlanacak.setExecutable(true);
-            tekrarlanacak.process(stack);
+            kosul.execute(stack);
 
-            kosul.setExecutable(true);
-            kosul.process(stack);
-
-            kontrol = stack.getArgument();
-
+            kontrol = stack.getBooleanArgument();
         }
 
         return new ZyEmpty();
-
     }
 
     /**
@@ -920,8 +881,7 @@ public class BuiltIn {
         ZyObject tekrarlanacak = arg.get(0);
 
         for (int i = baslangic.intValue(); i < son.intValue(); i += aralik.intValue()) {
-            tekrarlanacak.setExecutable(true);
-            tekrarlanacak.process(stack);
+            tekrarlanacak.execute(stack);
         }
 
         return new ZyEmpty();
@@ -936,8 +896,7 @@ public class BuiltIn {
         List<ZyObject> arg = stack.getArgument(2);
 
         ZyObject saklanacakNesne = arg.get(1);
-        arg.get(0).setExecutable(true);
-        arg.get(0).process(stack);
+        arg.get(0).execute(stack);
 
         stack.add(saklanacakNesne);
         return new ZyEmpty();

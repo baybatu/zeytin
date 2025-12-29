@@ -8,7 +8,7 @@ public class ZyType extends ZyObject<String> {
      * 'type' fonksiyonu kullanır.
      */
     public ZyType(ZyObject object) {
-        super(object.getType(), false);
+        super(object.getType());
     }
 
     @Override

@@ -8,7 +8,7 @@ public class ZyBoolean extends ZyObject<Boolean> {
      * çalıştırıldığında kendisini yığına atar.
      */
     public ZyBoolean(Boolean value) {
-        super(value, false);
+        super(value);
     }
 
     @Override
@@ -18,8 +18,7 @@ public class ZyBoolean extends ZyObject<Boolean> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ZyBoolean) {
-            ZyBoolean i = (ZyBoolean) o;
+        if (o instanceof ZyBoolean i) {
             return this.getValue() == i.getValue();
         }
         return false;

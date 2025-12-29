@@ -5,6 +5,7 @@ import com.batuhanbayrakci.ZyStack;
 public class ZyEmpty extends ZyObject<String> {
 
     public ZyEmpty() {
+        super("");
     }
 
     @Override

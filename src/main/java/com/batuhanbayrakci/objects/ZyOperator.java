@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public class ZyOperator extends ZyObject<String> {
 
     public ZyOperator(String value) {
-        super(value, true);
+        super(value);
     }
 
     @Override
@@ -20,8 +20,13 @@ public class ZyOperator extends ZyObject<String> {
 
     @Override
     public void process(ZyStack stack) throws ZyError {
+        execute(stack);
+    }
+
+    @Override
+    public void execute(ZyStack stack) throws ZyError {
         try {
-            Method methodForExecution = ZySystemTable.INSTANCE.findName(this);
+            Method methodForExecution = ZySystemTable.INSTANCE.findName(getValue());
             ZyObject objectForAdd = (ZyObject) methodForExecution.invoke(null, stack);
             stack.push(objectForAdd);
         } catch (IllegalArgumentException | IllegalAccessException e) {

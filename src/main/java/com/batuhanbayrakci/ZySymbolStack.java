@@ -83,7 +83,6 @@ public class ZySymbolStack extends Stack<ZySymbolTable> {
      * bulunamazsa null döndürür.
      */
     public ZyObject findName(ZyName name) {
-        // yığını üstten alta doğru tarar.
         for (int i = this.size() - 1; i >= 0; i--) {
             if (this.get(i).containsKey(name)) {
                 return this.get(i).get(name);

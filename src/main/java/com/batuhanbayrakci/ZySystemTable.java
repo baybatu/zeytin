@@ -1,7 +1,6 @@
 package com.batuhanbayrakci;
 
 import com.batuhanbayrakci.modules.BuiltIn;
-import com.batuhanbayrakci.objects.ZyObject;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ public class ZySystemTable {
 
     public static final ZySystemTable INSTANCE = new ZySystemTable();
 
-    private Map<String, Method> systemFunctions = new HashMap<>();
+    private final Map<String, Method> systemFunctions = new HashMap<>();
 
     private ZySystemTable() {
         loadSystemOperators();
@@ -73,6 +72,8 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("buyukEsitlik", ZyStack.class));
             systemFunctions.put("eger",
                     BuiltIn.class.getDeclaredMethod("kosul", ZyStack.class));
+            systemFunctions.put("yap",
+                    BuiltIn.class.getDeclaredMethod("kosul", ZyStack.class));
             systemFunctions.put("tekrar",
                     BuiltIn.class.getDeclaredMethod("tekrarla", ZyStack.class));
             systemFunctions.put("al",
@@ -113,11 +114,11 @@ public class ZySystemTable {
      * Yorumlayıcının dahili fonksiyonlarını barındıran tabloda arama yapan
      * ve {@link java.lang.reflect.Method} tipinde döndüren metot.
      *
-     * @param    object    sistem fonksiyonları tablosunda aranacak dizge
+     * @param name sistem fonksiyonları tablosunda aranacak dizge
      * @return aranan isim bulunursa bulunan dizgeye karşılık gelen Method tipi
      * nesne döndürülür. Bulunamazsa <code>null</code> döndürlür.
      */
-    public Method findName(ZyObject zyObject) {
-        return systemFunctions.get(zyObject.getValue());
+    public Method findName(String name) {
+        return systemFunctions.get(name);
     }
 }

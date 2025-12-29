@@ -8,18 +8,9 @@ import java.util.Stack;
 public abstract class ZyObject<T> {
 
     private T value;
-    private boolean executable;
-
-    public ZyObject() {
-    }
 
     public ZyObject(T value) {
         this.value = value;
-    }
-
-    public ZyObject(T value, boolean executable) {
-        this(value);
-        this.executable = executable;
     }
 
     public abstract String getType();
@@ -28,12 +19,8 @@ public abstract class ZyObject<T> {
         stack.add(this);
     }
 
-    public boolean isExecutable() {
-        return executable;
-    }
-
-    public void setExecutable(boolean executable) {
-        this.executable = executable;
+    public void execute(ZyStack stack) throws ZyError {
+        process(stack);
     }
 
     //todo:batu:remove
@@ -66,11 +53,7 @@ public abstract class ZyObject<T> {
 
         ZyObject zyObject = (ZyObject) o;
 
-        if (value != null ? !value.equals(zyObject.value) : zyObject.value != null) {
-            return false;
-        }
-
-        return true;
+        return value != null ? value.equals(zyObject.value) : zyObject.value == null;
     }
 
     @Override

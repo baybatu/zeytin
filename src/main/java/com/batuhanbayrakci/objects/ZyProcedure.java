@@ -15,7 +15,7 @@ import java.util.List;
  * Her prosedürün içerisinde ZyNesne nesneleri bulunur ve bu nesneler
  * calistir(ZyYigin) metodu yardımıyla çalıştırılır. Tüm nesneler
  * {@link ZyObject} sınıfından türediği için bir prosedür başka bir prosedür
- * içerisinde bulunabilir. Çünkü prosedürün kendisi de bir ZyNesne'dir.
+ * içerisinde bulunabilir. Çünkü prosedürün kendisi de bir ZyObject'dir.
  * Bu sayede iç içe prosedür gerçekleştirimi elde edilmiş olur.
  * <p>
  * Her prosedürün kendine özgü bir kapsamı vardır ve bu kapsam, prosedür
@@ -24,26 +24,15 @@ import java.util.List;
  * Prosedürün sahip olduğu elemanlar {@link com.batuhanbayrakci.ZyStack} tipinde bir veri yapısında
  * tutulur.
  */
-public class ZyProcedure extends ZyObject<List<ZyObject>> {
-
-    /**
-     * Prosedürün barındırdığı ZyNesne nesnelerinin tutulduğu veri yapısı
-     */
-
-    public ZyProcedure() {
-        super(new ZyStack());
-    }
+public class ZyProcedure extends ZyObject<List<ZyObject<?>>> {
 
     /**
      * Prosedürün ilk yüklemesini yapar. Prosedürün iç yığınını oluşturur ve
      * yapılandırır.
      *
-     * @param value      prosedürün kendi elemanlarının tutulduğu liste
-     * @param executable prosedürün hemen mi yoksa sonra mı çalıştırılacağına
-     *                   karar veren öznitelik
      */
-    public ZyProcedure(List<ZyObject> value) {
-        super(value);
+    public ZyProcedure() {
+        super(new ZyStack());
     }
 
     @Override
@@ -52,31 +41,9 @@ public class ZyProcedure extends ZyObject<List<ZyObject>> {
     }
 
     /**
-     * {@link ZyCalistici} tipi bir nesnenin tetiklediği metot.
-     * Oluşabilecek herhangi bir hatayı ZyHata üzerinden çalıştırıcıya
-     * gönderir.
-     * <p>
-     * Eğer <code>executable</code> özniteliği <code>true</code>
-     * ise içindeki elemanları tek tek çalıştırmaya başlar. <code>false</code> ise
-     * prosedür, kendisini doğrudan yığına atar.
-     *
-     * @throws com.batuhanbayrakci.exception.ZyError
-     * @param    stack    Ana yığın
-     */
-    @Override
-    public void process(ZyStack stack) throws ZyError {
-        if (isExecutable()) {
-            evaluate(stack);
-        } else {
-            stack.add(this);
-        }
-    }
-
-    /**
-     * <p><code>executable</code> özniteliğinin <code>true</code> olması
-     * durumunda dallanılan metot. Bu metotta öncelikle söz konusu prosedüre ait
-     * bir kapsam oluşturulur. Ardından ise prosedür içerisindeki tüm {@link ZyObject}
-     * tipi nesneler tek tek çalıştırılır ve sonuçları ana yığına atılır.</p>
+     * Soz konusu prosedüre ait bir kapsam oluşturulur.
+     * Ardından ise prosedür içerisindeki tüm {@link ZyObject}
+     * tipi nesneler tek tek isletilir.
      *
      * <p>Prosedür sona ermeden önce o prosedüre ait kapsam sembol tabloları yığınından
      * atılır.</p>
@@ -84,10 +51,10 @@ public class ZyProcedure extends ZyObject<List<ZyObject>> {
      * @throws com.batuhanbayrakci.exception.ZyError
      * @param    stack    Ana yığın
      */
-    public void evaluate(ZyStack stack) throws ZyError {
+    public void execute(ZyStack stack) throws ZyError {
         ZySymbolTable symbolTableForProc = new ZySymbolTable();
         ZySymbolStack.INSTANCE.addTable(symbolTableForProc);
-        for (ZyObject obj : getValue()) {
+        for (ZyObject<?> obj : getValue()) {
             obj.process(stack);
         }
         ZySymbolStack.INSTANCE.removeTable();

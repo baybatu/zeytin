@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
  */
 public class ZyName extends ZyObject<String> {
 
+    private final boolean executable;
+
     /**
      * ZyIsim türünde bir isim nesnesi oluşturur.
      *
@@ -38,8 +40,17 @@ public class ZyName extends ZyObject<String> {
      * gecikmeli mi çalıştırılacağını
      * belirler
      */
-    public ZyName(String value, boolean executable) {
-        super(value, executable);
+    private ZyName(String value, boolean executable) {
+        super(value);
+        this.executable = executable;
+    }
+
+    public static ZyName createExecutable(String value) {
+        return new ZyName(value, true);
+    }
+
+    public static ZyName createLiteral(String value) {
+        return new ZyName(value, false);
     }
 
     @Override
@@ -48,7 +59,7 @@ public class ZyName extends ZyObject<String> {
     }
 
     /**
-     * {@link ZyCalistici} tipi bir nesnenin tetiklediği metot.
+     * {@link com.batuhanbayrakci.ObjectProcessor} tipi bir nesnenin tetiklediği metot.
      * Oluşabilecek herhangi bir hatayı ZyHata üzerinden çalıştırıcıya
      * gönderir.
      * <p>
@@ -61,12 +72,8 @@ public class ZyName extends ZyObject<String> {
      */
     @Override
     public void process(ZyStack stack) throws ZyError {
-        if (isExecutable()) {
-            try {
-                evaluate(stack);
-            } catch (ZyNameError zih) {
-                System.out.println(zih.getMessage());
-            }
+        if (executable) {
+            execute(stack);
         } else {
             stack.push(this);
         }
@@ -84,43 +91,28 @@ public class ZyName extends ZyObject<String> {
      * @throws com.batuhanbayrakci.exception.ZyError
      * @param    stack    Ana yığın
      */
-    public void evaluate(ZyStack stack) throws ZyError {
-        ZyObject objectForExecution = null;
+    @Override
+    public void execute(ZyStack stack) throws ZyError {
+        ZyObject<?> objectForExecution = ZySymbolStack.INSTANCE.findName(this);
 
-        // once sembol tabloya bak
-        objectForExecution = ZySymbolStack.INSTANCE.findName(this);
-
-        // yoksa sistem tablosuna bak
         if (objectForExecution == null) {
-            Method met = ZySystemTable.INSTANCE.findName(this);
-            // sistem tablosunda da yoksa
+            Method met = ZySystemTable.INSTANCE.findName(getValue());
             if (met == null) {
-                throw new ZyNameError("\"" + (String) this.getValue() + "\"" +
+                throw new ZyNameError("\"" + this.getValue() + "\"" +
                         " ismi bulunamadı.", SourceMap.getLineOf(this));
             } else {
                 try {
-                    // sistem tablosunda karşılık gelen metodu tetikle
-                    objectForExecution = (ZyObject) met.invoke(BuiltIn.class, stack);
-                    // sistem tablosundan çekilen nesneyi çalıştır
-                    objectForExecution.process(stack);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                    met.invoke(BuiltIn.class, stack);
+                } catch (IllegalArgumentException | IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    // getTargetException ile hangi type hatayı
-                    // yakaladığını buluruz
                     Throwable th = e.getTargetException();
                     throw (ZyError) th;
                 }
             }
         } else {
-            // kullanıcı tanımlı isim çalıştırmadan önce...
-            objectForExecution.setExecutable(true);
-            objectForExecution.process(stack);
-            objectForExecution.setExecutable(false);
+            objectForExecution.execute(stack);
         }
-
     }
 
     /**
@@ -143,19 +135,14 @@ public class ZyName extends ZyObject<String> {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ZyName) {
-            ZyName i = (ZyName) o;
+        if (o instanceof ZyName i) {
             return getValue().equals(i.getValue());
         }
         return false;
     }
 
-    /**
-     * Nesnenin karakter biçiminde gösterimini sunar
-     */
     @Override
     public String toString() {
         return getValue();
     }
-
 }

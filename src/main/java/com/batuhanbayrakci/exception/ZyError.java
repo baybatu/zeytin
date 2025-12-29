@@ -1,9 +1,14 @@
 package com.batuhanbayrakci.exception;
 
+import java.io.Serial;
+
 public class ZyError extends RuntimeException {
 
-    protected String type = null;
-    private String message = null;
+    @Serial
+    private static final long serialVersionUID = -4372816058610900646L;
+
+    protected String type;
+    private final String message;
     private int line = 0;
 
     public ZyError(String message) {
@@ -21,9 +26,8 @@ public class ZyError extends RuntimeException {
 
     @Override
     public String getMessage() {
-        String mesaj = "Satır: " + this.line +
+        return "Satır: " + this.line +
                 "\n" + this.type + ": " + this.message;
-        return mesaj;
     }
 
 }

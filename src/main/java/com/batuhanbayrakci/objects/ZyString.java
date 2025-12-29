@@ -7,11 +7,8 @@ public class ZyString extends ZyObject<String> {
      * bu durumda bir literal gibi işlem görür
      * çalıştırıldığında kendisini yığına atar.
      */
-    public ZyString() {
-    }
-
     public ZyString(String value) {
-        super(value, false);
+        super(value);
     }
 
     @Override
@@ -41,8 +38,7 @@ public class ZyString extends ZyObject<String> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ZyString) {
-            ZyString otherStr = (ZyString) o;
+        if (o instanceof ZyString otherStr) {
             return getValue().equals(otherStr.getValue());
         }
         return false;

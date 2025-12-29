@@ -8,7 +8,7 @@ package com.batuhanbayrakci.objects;
 public class ZyNumber extends ZyObject<Double> {
 
     public ZyNumber(double value) {
-        super(value, false);
+        super(value);
     }
 
     public int intValue() {
@@ -17,8 +17,7 @@ public class ZyNumber extends ZyObject<Double> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ZyNumber) {
-            ZyNumber i = (ZyNumber) o;
+        if (o instanceof ZyNumber i) {
             return getValue().equals(i.getValue());
         }
         return false;

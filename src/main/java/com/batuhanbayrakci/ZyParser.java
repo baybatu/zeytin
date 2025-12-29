@@ -37,8 +37,8 @@ public class ZyParser implements Constants {
      * +5+5+ gibi bir diziyi de kabul eder ki bu okuması zor bir koda imkan
      * vermek anlamına gelir. Onun için bu basit kurallar faydalıdır.
      */
-    private List<Token> tokens;
-    private String code;
+    private final List<Token> tokens;
+    private final String code;
 
     ZyParser(String code, List<Token> tokens) {
         this.tokens = tokens;
@@ -55,7 +55,7 @@ public class ZyParser implements Constants {
      * Parantez eşleme bu fonksiyonun işi değildir.
      */
     private Token paranthesisControl() {
-        Stack<Integer> parantezKontrol = new Stack<Integer>();
+        Stack<Integer> parantezKontrol = new Stack<>();
         Token mevcutToken = new Token(-1, -1, -1, -1);
 
         for (Token t : this.tokens) {
@@ -67,10 +67,10 @@ public class ZyParser implements Constants {
                     break;
 
                 case CLOSE_SQUARE_BRACKET:
-                    if (parantezKontrol.size() == 0) {
+                    if (parantezKontrol.isEmpty()) {
                         return t;
                     } else {
-                        if (parantezKontrol.get(parantezKontrol.size() - 1) == OPEN_SQUARE_BRACKET) {
+                        if (parantezKontrol.getLast() == OPEN_SQUARE_BRACKET) {
                             parantezKontrol.pop();
                         } else {
                             return t;
@@ -83,10 +83,10 @@ public class ZyParser implements Constants {
                     break;
 
                 case CLOSE_CURVY_BRACKET:
-                    if (parantezKontrol.size() == 0) {
+                    if (parantezKontrol.isEmpty()) {
                         return t;
                     } else {
-                        if (parantezKontrol.get(parantezKontrol.size() - 1) == OPEN_CURVY_BRACKET) {
+                        if (parantezKontrol.getLast() == OPEN_CURVY_BRACKET) {
                             parantezKontrol.pop();
                         } else {
                             return t;
@@ -99,22 +99,19 @@ public class ZyParser implements Constants {
 
         }
 
-        if (parantezKontrol.size() == 0) {
+        if (parantezKontrol.isEmpty()) {
             return new Token(-1, -1, -1, -1); // söz dizim hatasız!
         } else {
             return mevcutToken;
         }
     }
 
-    /**
-     *
-     * */
     private Token positionControl() {
-        Stack<Token> konumYigini = new Stack<Token>();
-        int solEleman = -1;
+        Stack<Token> konumYigini = new Stack<>();
+        int solEleman;
 
         for (Token t : this.tokens) {
-            if (konumYigini.size() == 0) {
+            if (konumYigini.isEmpty()) {
                 konumYigini.add(t);
             } else {
                 switch (t.getType()) {
@@ -140,7 +137,7 @@ public class ZyParser implements Constants {
                     default:
                         konumYigini.add(t);
                         break;
-                } // switch
+                }
 
             }
 
@@ -165,23 +162,23 @@ public class ZyParser implements Constants {
      * bir {@link Token} nesnesi döndürülür. Fakat bir hata oluşursa
      * hatayı sebep olan {@link Token} nesnesi döndürülür.
      */
+
     private Token stringControl() {
-        Stack<String> stringStack = new Stack<String>();
+        Stack<String> stringStack = new Stack<>();
 
         for (Token token : this.tokens) {
             if (token.getType() == STRING) {
                 String str = this.code.substring(token.getStart(), token.getEnd());
-                // String dizisine çevir
                 String[] d = str.substring(1, str.length() - 1).split("");
                 for (String s : d) {
                     // eğer sadece yalın " varsa hata ver
-                    if (stringStack.size() == 0) {
+                    if (stringStack.isEmpty()) {
                         if (s.equals("\"")) {
                             return token;
                         }
                     }
                     // önceden eklenmiş \ karakteri var mı ?
-                    if (stringStack.size() > 0) {
+                    if (!stringStack.isEmpty()) {
                         if (s.equals("\"")) {
                             // yani " yakalandı
                             stringStack.pop();
@@ -194,21 +191,16 @@ public class ZyParser implements Constants {
                             // \ karakterinden sonra farklı bir şey varsa
                             stringStack.pop();
                         }
-
                     }
 
                     if (s.equals("\\")) {
                         stringStack.add(s);
-                        continue; // bir sonraki karaktere git
                     }
-
-
                 }
 
                 // eğer yığında \ karakteri kalırsa demek ki eşleşmeyen \ karakteri
                 // vardır ki bu da hata demektir.
-                if (stringStack.size() > 0) {
-                    // hatalı tokeni ver
+                if (!stringStack.isEmpty()) {
                     return token;
                 }
 
@@ -233,14 +225,10 @@ public class ZyParser implements Constants {
      *
      * @return Eğer herhangi bir ayıklama hatası oluşmazsa {@link com.batuhanbayrakci.objects.ZyObject} tipinde
      * nesneleri barındıran bir {@link java.util.List} nesnesi döndürülür.
-     * @throws Hatayı ifade etmek için {@link com.batuhanbayrakci.exception.ZySyntaxError} tipinde
-     *                bir istisna fırlatılır. İstisna içerisinde ortaya çıkan istisna
-     *                ile ilgili metin bilgisi ve hatanın oluştuğu satır bilgisi bulunur.
+     * @throws com.batuhanbayrakci.exception.ZySyntaxError
      */
-    public List<ZyObject> parse() throws ZySyntaxError {
-        // Kontrolcü çalışmalı ve tokenların söz dizime
-        // uygun yerleşip yerleşmediğine bakmalı
-        Token token = null;
+    public List<ZyObject<?>> parse() throws ZySyntaxError {
+        Token token;
 
         token = stringControl();
         if (!(token.getStart() == -1)) {
@@ -262,33 +250,22 @@ public class ZyParser implements Constants {
         return createObjects();
     }
 
-    public List<ZyObject> createObjects() {
+    public List<ZyObject<?>> createObjects() {
 
-        // nesneListesi, çalıştırıcıya gönderilecek nesneleri
-        // tutan bir veri yapısıdır.
-        List<ZyObject> objectList = new ArrayList<ZyObject>();
+        List<ZyObject<?>> objectList = new ArrayList<>();
 
-        // geciciYigin, prosedür ve listelerin parantezlerinin
-        // konumuna göre iç içe olabilecek liste ve prosedürleri
-        // doğru şekilde oluşturmak amacıyla kullanılan bir kontrol
-        // yığınıdır.
-        List<ZyObject> tempStack = new Stack<ZyObject>();
-
-        // tüm nesnelerin oluşturulmasında sırayla kullanılan nesne.
-        // her döngüde karşılaşılan token için üretilen nesne geçici
-        // olarak bunda depo edilir.
-        ZyObject object = null;
+        // control stack for assuring of correctness of list and procedure definitions
+        List<ZyObject<?>> tempStack = new Stack<>();
 
         for (Token token : this.tokens) {
             switch (token.getType()) {
 
                 case NAME_LITERAL:
-                    object = new ZyName(this.code.substring(token.getStart() + 1,
-                            token.getEnd()), false);
+                    ZyName object = ZyName.createLiteral(this.code.substring(token.getStart() + 1, token.getEnd()));
                     SourceMap.addObject(object, token.getLine());
 
-                    if (tempStack.size() > 0) {
-                        tempStack.get(tempStack.size() - 1).add(object);
+                    if (!tempStack.isEmpty()) {
+                        tempStack.getLast().add(object);
                     } else {
                         objectList.add(object);
                     }
@@ -296,99 +273,94 @@ public class ZyParser implements Constants {
                     break;
 
                 case NAME_EXECUTABLE:
-                    object = new ZyName(this.code.substring(token.getStart(),
-                            token.getEnd()), true);
-                    SourceMap.addObject(object, token.getLine());
+                    ZyName executableName = ZyName.createExecutable(this.code.substring(token.getStart(), token.getEnd()));
+                    SourceMap.addObject(executableName, token.getLine());
 
-                    if (tempStack.size() > 0) {
-                        tempStack.get(tempStack.size() - 1).add(object);
+                    if (!tempStack.isEmpty()) {
+                        tempStack.getLast().add(executableName);
                     } else {
-                        objectList.add(object);
+                        objectList.add(executableName);
                     }
 
                     break;
 
                 case NUMBER:
-                    object = new ZyNumber(Double.parseDouble(this.code
-                            .substring(token.getStart(), token.getEnd())));
-                    SourceMap.addObject(object, token.getLine());
+                    ZyNumber number = new ZyNumber(
+                            Double.parseDouble(this.code.substring(token.getStart(), token.getEnd())));
+                    SourceMap.addObject(number, token.getLine());
 
-                    if (tempStack.size() > 0) {
-                        tempStack.get(tempStack.size() - 1).add(object);
+                    if (!tempStack.isEmpty()) {
+                        tempStack.getLast().add(number);
                     } else {
-                        objectList.add(object);
+                        objectList.add(number);
                     }
 
                     break;
 
                 case OPERATOR:
-                    object = new ZyOperator(this.code.substring(token.getStart(),
-                            token.getEnd()));
-                    SourceMap.addObject(object, token.getLine());
+                    ZyOperator operator = new ZyOperator(this.code.substring(token.getStart(), token.getEnd()));
+                    SourceMap.addObject(operator, token.getLine());
 
-                    if (tempStack.size() > 0) {
-                        tempStack.get(tempStack.size() - 1).add(object);
+                    if (!tempStack.isEmpty()) {
+                        tempStack.getLast().add(operator);
                     } else {
-                        objectList.add(object);
+                        objectList.add(operator);
                     }
 
                     break;
 
                 case STRING:
-                    object = new ZyString(this.code.substring(token.getStart() + 1,
-                            token.getEnd() - 1));
-                    SourceMap.addObject(object, token.getLine());
+                    ZyString string = new ZyString(this.code.substring(token.getStart() + 1, token.getEnd() - 1));
+                    SourceMap.addObject(string, token.getLine());
 
-                    if (tempStack.size() > 0) {
-                        tempStack.get(tempStack.size() - 1).add(object);
+                    if (!tempStack.isEmpty()) {
+                        tempStack.getLast().add(string);
                     } else {
-                        objectList.add(object);
+                        objectList.add(string);
                     }
 
                     break;
 
                 case OPEN_SQUARE_BRACKET:
-                    object = new ZyList(new ArrayList<>());
-                    tempStack.add(object);
+                    ZyList list = new ZyList(new ArrayList<>());
+                    tempStack.add(list);
                     break;
 
                 case CLOSE_SQUARE_BRACKET:
-
                     if (tempStack.size() > 1) {
-                        ZyObject alt = tempStack.get(tempStack.size() - 1);
-                        tempStack.remove(tempStack.size() - 1);
-                        tempStack.get(tempStack.size() - 1).add(alt);
+                        ZyObject<?> alt = tempStack.getLast();
+                        tempStack.removeLast();
+                        tempStack.getLast().add(alt);
                         SourceMap.addObject(alt, token.getLine());
                     } else {
-                        ZyObject alt = tempStack.get(tempStack.size() - 1);
+                        ZyObject<?> alt = tempStack.getLast();
                         objectList.add(alt);
-                        tempStack.remove(tempStack.size() - 1);
+                        tempStack.removeLast();
                         SourceMap.addObject(alt, token.getLine());
                     }
                     break;
 
                 case OPEN_CURVY_BRACKET:
-                    object = new ZyProcedure();
-                    tempStack.add(object);
+                    ZyProcedure procedure = new ZyProcedure();
+                    tempStack.add(procedure);
                     break;
 
                 case CLOSE_CURVY_BRACKET:
 
                     if (tempStack.size() > 1) {
-                        ZyObject alt = tempStack.get(tempStack.size() - 1);
-                        tempStack.remove(tempStack.size() - 1);
-                        tempStack.get(tempStack.size() - 1).add(alt);
+                        ZyObject<?> alt = tempStack.getLast();
+                        tempStack.removeLast();
+                        tempStack.getLast().add(alt);
                         SourceMap.addObject(alt, token.getLine());
                     } else {
-                        ZyObject alt = tempStack.get(tempStack.size() - 1);
+                        ZyObject<?> alt = tempStack.getLast();
                         objectList.add(alt);
-                        tempStack.remove(tempStack.size() - 1);
+                        tempStack.removeLast();
                         SourceMap.addObject(alt, token.getLine());
                     }
                     break;
 
                 case COMMENT:
-                    // yorum, bisi yapma
                     break;
 
                 case WHITESPACE:

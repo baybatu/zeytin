@@ -31,10 +31,10 @@ import java.util.List;
  * Listedeki elemanlar birbirleriyle en az bir boşluk yardımıyla ayrılırlar.
  * Herhangi bir virgül benzeri ayırıcı karaktere ihtiyaç duymazlar.
  */
-public class ZyList extends ZyObject<List<ZyObject>> {
+public class ZyList extends ZyObject<List<ZyObject<?>>> {
 
-    public ZyList(List<ZyObject> value) {
-        super(value, false);
+    public ZyList(List<ZyObject<?>> value) {
+        super(value);
         getValue().addAll(value);
     }
 

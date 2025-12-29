@@ -9,10 +9,8 @@ import com.batuhanbayrakci.scanner.Token;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,20 +31,18 @@ public class Modes {
      * sonuçlar yığına aktarılır.
      */
     public static void interactiveMode() {
-        int curvyBracketBalance = 0;
-        int squareBracketBalance = 0;
-        boolean error = false;
-        String inputSymbol = "";
-        String source = "";
+        int curvyBracketBalance;
+        int squareBracketBalance;
+        boolean error;
+        String inputSymbol;
+        String source;
         Scanner scanner = new Scanner();
         ObjectProcessor processor = new ObjectProcessor();
-        List<ZyObject> objects = new ArrayList<ZyObject>();
-        ZyParser parser = null;
+        List<ZyObject<?>> objects;
+        ZyParser parser;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
-            curvyBracketBalance = 0;
-            squareBracketBalance = 0;
             error = false;
             Scanner.setLine(0);
             inputSymbol = String.format("(%s) >>> ", processor.objectCount());
@@ -93,13 +89,11 @@ public class Modes {
                         break;
                     } else if (curvyBracketBalance == 0 && squareBracketBalance == 0) {
                         break;
-                    } else
-                        continue;
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ZySyntaxError zsh) {
-                    // tokenize hatasi olusursa
                     System.out.println(zsh.getMessage());
                     error = true;
                     break;
@@ -122,18 +116,18 @@ public class Modes {
     }
 
     public static void fileMode(String file) {
-        BufferedReader br = null;
-        DataInputStream in = null;
+        BufferedReader br;
+        DataInputStream in;
         Scanner scanner = new Scanner();
         ObjectProcessor executor = new ObjectProcessor();
-        List<ZyObject> objects = new ArrayList<ZyObject>();
-        ZyParser parser = null;
+        List<ZyObject<?>> objects;
+        ZyParser parser;
         try {
             FileInputStream fstream = new FileInputStream(file);
             in = new DataInputStream(fstream);
             br = new BufferedReader(new InputStreamReader(in));
 
-            String line = null;
+            String line;
             String source = "";
 
             while ((line = br.readLine()) != null) {
@@ -152,10 +146,8 @@ public class Modes {
             in.close();
             executor.showStack();
 
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
         } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
-
     }
 }
