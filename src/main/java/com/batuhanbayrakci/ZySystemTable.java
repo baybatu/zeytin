@@ -1,6 +1,8 @@
 package com.batuhanbayrakci;
 
 import com.batuhanbayrakci.modules.BuiltIn;
+import com.batuhanbayrakci.modules.namefunctions.If;
+import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -15,9 +17,15 @@ public class ZySystemTable {
     public static final ZySystemTable INSTANCE = new ZySystemTable();
 
     private final Map<String, Method> systemFunctions = new HashMap<>();
+    private final Map<String, ZyNameFunction> systemNameFunctions = new HashMap<>();
 
     private ZySystemTable() {
         loadSystemOperators();
+        loadSystemNameFunctions();
+    }
+
+    private void loadSystemNameFunctions() {
+        systemNameFunctions.put("eger", new If());
     }
 
     private void loadSystemOperators() {
@@ -70,8 +78,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("buyukluk", ZyStack.class));
             systemFunctions.put(">=",
                     BuiltIn.class.getDeclaredMethod("buyukEsitlik", ZyStack.class));
-            systemFunctions.put("eger",
-                    BuiltIn.class.getDeclaredMethod("kosul", ZyStack.class));
             systemFunctions.put("yap",
                     BuiltIn.class.getDeclaredMethod("kosul", ZyStack.class));
             systemFunctions.put("tekrar",
@@ -120,5 +126,9 @@ public class ZySystemTable {
      */
     public Method findName(String name) {
         return systemFunctions.get(name);
+    }
+
+    public ZyNameFunction findNameFunction(String name) {
+        return systemNameFunctions.get(name);
     }
 }

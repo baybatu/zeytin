@@ -1,4 +1,4 @@
-package com.batuhanbayrakci.modules;
+package com.batuhanbayrakci.modules.namefunctions;
 
 import com.batuhanbayrakci.ZyStack;
 import com.batuhanbayrakci.exception.ZyStackUnderflowError;
@@ -10,28 +10,25 @@ import com.batuhanbayrakci.sourcemap.SourceMap;
 import java.util.List;
 
 /**
- * This is a ZyNameFunction
+ * This is a ZyNameFunction for traditional IF condition
  * Usage: BOOL OBJ1 OBJ2 eger
- * It execute OBJ1 if  
+ * It executes OBJ1 if BOOL is true (d), otherwise executes OBJ2
  */
-public class If {
+public class If implements ZyNameFunction {
 
+    @Override
     public void process(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
         List<ZyObject> arg = stack.getArgument(3);
 
-        if (!(arg.get(2) instanceof ZyBoolean)) {
+        if (!(arg.get(2) instanceof ZyBoolean condition)) {
             throw new ZyTypeError("'" + arg.get(2).getType()
                     + "' tipi, koşul için geçersiz argüman tipidir.", SourceMap.getLineOf(arg.get(0)));
         }
 
-        ZyBoolean kosul = (ZyBoolean) arg.get(2);
-        ZyObject yapilacakIlk = arg.get(0);
-        ZyObject yapilacakIkinci = arg.get(1);
-
-        if (kosul.getValue()) {
-            yapilacakIkinci.execute(stack);
+        if (condition.getValue()) {
+            arg.get(1).execute(stack);
         } else {
-            yapilacakIlk.execute(stack);
+            arg.getFirst().execute(stack);
         }
     }
 }

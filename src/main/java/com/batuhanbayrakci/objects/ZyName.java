@@ -98,8 +98,11 @@ public class ZyName extends ZyObject<String> {
         if (objectForExecution == null) {
             Method met = ZySystemTable.INSTANCE.findName(getValue());
             if (met == null) {
-                throw new ZyNameError("\"" + this.getValue() + "\"" +
-                        " ismi bulunamadı.", SourceMap.getLineOf(this));
+                var nameFunction = ZySystemTable.INSTANCE.findNameFunction(getValue());
+                if (nameFunction == null) {
+                    throw new ZyNameError("\"" + this.getValue() + "\"" + " ismi bulunamadı.", SourceMap.getLineOf(this));
+                }
+                nameFunction.process(stack);
             } else {
                 try {
                     met.invoke(BuiltIn.class, stack);
