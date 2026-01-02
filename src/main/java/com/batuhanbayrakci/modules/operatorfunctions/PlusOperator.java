@@ -1,0 +1,57 @@
+package com.batuhanbayrakci.modules.operatorfunctions;
+
+import com.batuhanbayrakci.ZyStack;
+import com.batuhanbayrakci.exception.ZyStackUnderflowError;
+import com.batuhanbayrakci.exception.ZyTypeError;
+import com.batuhanbayrakci.objects.ZyList;
+import com.batuhanbayrakci.objects.ZyNumber;
+import com.batuhanbayrakci.objects.ZyObject;
+import com.batuhanbayrakci.objects.ZyString;
+import com.batuhanbayrakci.sourcemap.SourceMap;
+
+import java.util.List;
+
+public class PlusOperator implements ZyOperatorFunction {
+
+    /**
+     * Toplama(+) operatörü için kullanılan metot. Kökeni farklı tipler
+     * arasındaki işlemlere izin vermez. Fakat örnek olarak doğruluk tipiyle
+     * sayı tipi ile toplama işlemine girebilir çünkü doğruluk tipinin kökeni
+     * sayı tipidir. Fakat dizge ile sayı tipi aynı kökene sahip olmadığı için
+     * bu işleme giremez.
+     * <p>
+     * Bununla beraber dizgelerin birbirleriyle birleştirilmesi, listelerin de kendi
+     * aralarında birleştirilmesi işlemlerinde de kullanılır.
+     *
+     * @param stack İşlemin yapılacağı veya sonucun aktarılacağı veri yığını
+     * @return İşlem sonucu elde edilen değer, uygun bir {@link com.batuhanbayrakci.objects.ZyObject} tipinde döndürülür.
+     * @throws com.batuhanbayrakci.exception.ZyTypeError           Eğer kökeni farklı iki nesne toplanmaya veya farklı tipte nesneler
+     *                                                             toplanmaya çalışılırsa fırlatılır.
+     * @throws com.batuhanbayrakci.exception.ZyStackUnderflowError Toplama operatörünün çalışması için
+     *                                                             en az 2 argüman gerekir ki eğer yığında 2'den az eleman varsa bu hata fırlatılır.
+     */
+    @Override
+    public void process(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
+        List<ZyObject> args = stack.getArgument(2);
+
+        ZyObject firstObject = args.get(0);
+        ZyObject secondObject = args.get(1);
+        if (firstObject instanceof ZyNumber && secondObject instanceof ZyNumber) {
+            var result = new ZyNumber((Double) secondObject.getValue() + (Double) firstObject.getValue());
+            stack.push(result);
+        } else if (firstObject instanceof ZyString && secondObject instanceof ZyString) {
+            var result = new ZyString(secondObject.getValue() + (String) firstObject.getValue());
+            stack.push(result);
+        } else if (firstObject instanceof ZyList && secondObject instanceof ZyList) {
+            ((ZyList) secondObject).addAll((ZyList) firstObject);
+            stack.push(secondObject);
+        } else if (!firstObject.getClass().isAssignableFrom(secondObject.getClass())) {
+            throw new ZyTypeError("\"+\" operatörü '"
+                    + secondObject.getType() + "' ile '" + firstObject.getType()
+                    + "' tipleri arası işlemleri desteklemez", SourceMap.getLineOf(firstObject));
+        } else {
+            throw new ZyTypeError("'" + firstObject.getType()
+                    + "' tipi, \"+\" operatörünü desteklemez", SourceMap.getLineOf(firstObject));
+        }
+    }
+}

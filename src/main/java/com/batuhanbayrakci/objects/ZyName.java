@@ -6,10 +6,16 @@ import com.batuhanbayrakci.ZySystemTable;
 import com.batuhanbayrakci.exception.ZyError;
 import com.batuhanbayrakci.exception.ZyNameError;
 import com.batuhanbayrakci.modules.BuiltIn;
+import com.batuhanbayrakci.modules.namefunctions.If;
+import com.batuhanbayrakci.modules.namefunctions.Loop;
+import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -31,18 +37,20 @@ import java.lang.reflect.Method;
 public class ZyName extends ZyObject<String> {
 
     private final boolean executable;
+    private final Map<String, ZyNameFunction> systemNameFunctions = new HashMap<>();
 
     /**
      * ZyIsim türünde bir isim nesnesi oluşturur.
      *
-     * @param    value                nesneyi temsil edecek "isim"
-     * @param    executable    nesnenin hemen mi yoksa
-     * gecikmeli mi çalıştırılacağını
-     * belirler
+     * @param value      nesneyi temsil edecek "isim"
+     * @param executable nesnenin hemen mi yoksa
+     *                   gecikmeli mi çalıştırılacağını
+     *                   belirler
      */
     private ZyName(String value, boolean executable) {
         super(value);
         this.executable = executable;
+        loadSystemNameFunctions();
     }
 
     public static ZyName createExecutable(String value) {
@@ -51,6 +59,15 @@ public class ZyName extends ZyObject<String> {
 
     public static ZyName createLiteral(String value) {
         return new ZyName(value, false);
+    }
+
+    private void loadSystemNameFunctions() {
+        systemNameFunctions.put("eger", new If());
+        systemNameFunctions.put("tekrarla", new Loop());
+    }
+
+    public Optional<ZyNameFunction> findNameFunction(String name) {
+        return Optional.ofNullable(systemNameFunctions.get(name));
     }
 
     @Override
@@ -88,8 +105,8 @@ public class ZyName extends ZyObject<String> {
      * Bulunursa o ismin karşısında bulunan {@link java.lang.reflect.Method} tipinin ifade ettiği metot tetiklenir.
      * Tetiklenen metot da ana yığına eklenecek nesneyi döndürür.</p>
      *
+     * @param stack Ana yığın
      * @throws com.batuhanbayrakci.exception.ZyError
-     * @param    stack    Ana yığın
      */
     @Override
     public void execute(ZyStack stack) throws ZyError {
@@ -98,11 +115,11 @@ public class ZyName extends ZyObject<String> {
         if (objectForExecution == null) {
             Method met = ZySystemTable.INSTANCE.findName(getValue());
             if (met == null) {
-                var nameFunction = ZySystemTable.INSTANCE.findNameFunction(getValue());
-                if (nameFunction == null) {
+                var nameFunction = findNameFunction(getValue());
+                if (nameFunction.isEmpty()) {
                     throw new ZyNameError("\"" + this.getValue() + "\"" + " ismi bulunamadı.", SourceMap.getLineOf(this));
                 }
-                nameFunction.process(stack);
+                nameFunction.get().process(stack);
             } else {
                 try {
                     met.invoke(BuiltIn.class, stack);

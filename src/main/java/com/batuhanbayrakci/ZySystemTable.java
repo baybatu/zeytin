@@ -1,8 +1,6 @@
 package com.batuhanbayrakci;
 
 import com.batuhanbayrakci.modules.BuiltIn;
-import com.batuhanbayrakci.modules.namefunctions.If;
-import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,32 +14,17 @@ public class ZySystemTable {
 
     public static final ZySystemTable INSTANCE = new ZySystemTable();
 
+    @Deprecated
     private final Map<String, Method> systemFunctions = new HashMap<>();
-    private final Map<String, ZyNameFunction> systemNameFunctions = new HashMap<>();
 
     private ZySystemTable() {
         loadSystemOperators();
-        loadSystemNameFunctions();
-    }
-
-    private void loadSystemNameFunctions() {
-        systemNameFunctions.put("eger", new If());
     }
 
     private void loadSystemOperators() {
         try {
-            systemFunctions.put("+",
-                    BuiltIn.class.getDeclaredMethod("topla", ZyStack.class));
-            systemFunctions.put("-",
-                    BuiltIn.class.getDeclaredMethod("cikar", ZyStack.class));
-            systemFunctions.put("*",
-                    BuiltIn.class.getDeclaredMethod("carp", ZyStack.class));
-            systemFunctions.put("/",
-                    BuiltIn.class.getDeclaredMethod("bol", ZyStack.class));
             systemFunctions.put("mod",
                     BuiltIn.class.getDeclaredMethod("mod", ZyStack.class));
-            systemFunctions.put("++",
-                    BuiltIn.class.getDeclaredMethod("artir", ZyStack.class));
             systemFunctions.put("_",
                     BuiltIn.class.getDeclaredMethod("yiginGoruntule", ZyStack.class));
             systemFunctions.put("kaç",
@@ -68,20 +51,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("dogru", ZyStack.class));
             systemFunctions.put("y",
                     BuiltIn.class.getDeclaredMethod("yanlis", ZyStack.class));
-            systemFunctions.put("=",
-                    BuiltIn.class.getDeclaredMethod("esitlik", ZyStack.class));
-            systemFunctions.put("<",
-                    BuiltIn.class.getDeclaredMethod("kucukluk", ZyStack.class));
-            systemFunctions.put("<=",
-                    BuiltIn.class.getDeclaredMethod("kucukEsitlik", ZyStack.class));
-            systemFunctions.put(">",
-                    BuiltIn.class.getDeclaredMethod("buyukluk", ZyStack.class));
-            systemFunctions.put(">=",
-                    BuiltIn.class.getDeclaredMethod("buyukEsitlik", ZyStack.class));
-            systemFunctions.put("yap",
-                    BuiltIn.class.getDeclaredMethod("kosul", ZyStack.class));
-            systemFunctions.put("tekrar",
-                    BuiltIn.class.getDeclaredMethod("tekrarla", ZyStack.class));
             systemFunctions.put("al",
                     BuiltIn.class.getDeclaredMethod("dizgeElemanCek", ZyStack.class));
             systemFunctions.put("uzunluk",
@@ -126,9 +95,5 @@ public class ZySystemTable {
      */
     public Method findName(String name) {
         return systemFunctions.get(name);
-    }
-
-    public ZyNameFunction findNameFunction(String name) {
-        return systemNameFunctions.get(name);
     }
 }
