@@ -6,10 +6,13 @@ import com.batuhanbayrakci.ZySystemTable;
 import com.batuhanbayrakci.exception.ZyError;
 import com.batuhanbayrakci.exception.ZyNameError;
 import com.batuhanbayrakci.modules.BuiltIn;
+import com.batuhanbayrakci.modules.namefunctions.Define;
+import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
 import com.batuhanbayrakci.modules.namefunctions.If;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
 import com.batuhanbayrakci.modules.namefunctions.Mod;
+import com.batuhanbayrakci.modules.namefunctions.Pop;
 import com.batuhanbayrakci.modules.namefunctions.Swap;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
@@ -52,6 +55,9 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("mod", new Mod());
         systemNameFunctions.put("yd", new Swap());
         systemNameFunctions.put("calistir", new Execute());
+        systemNameFunctions.put("cikar", new Pop());
+        systemNameFunctions.put("cift", new Dup());
+        systemNameFunctions.put("t", new Define());
     }
 
     /**

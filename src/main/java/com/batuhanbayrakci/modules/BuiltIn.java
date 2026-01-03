@@ -17,7 +17,6 @@ import com.batuhanbayrakci.objects.ZyObject;
 import com.batuhanbayrakci.objects.ZyProcedure;
 import com.batuhanbayrakci.objects.ZyString;
 import com.batuhanbayrakci.objects.ZyType;
-import com.batuhanbayrakci.scanner.Scanner;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
 import java.io.BufferedReader;
@@ -61,39 +60,6 @@ public class BuiltIn {
         }
         ZyString okunanNesne = new ZyString(okunan);
         stack.add(okunanNesne);
-        return new ZyEmpty();
-    }
-
-    public static ZyObject elemanCikar(ZyStack stack)
-            throws ZyStackUnderflowError {
-        if (stack.size() == 0) {
-            throw new ZyStackUnderflowError("Yığında eleman yok", Scanner.getLine());
-        }
-        stack.pop();
-        return new ZyEmpty();
-    }
-
-    public static ZyObject elemanCiftle(ZyStack stack)
-            throws ZyStackUnderflowError {
-        ZyObject arg = stack.getArgument();
-        stack.add(arg);
-
-        return new ZyEmpty();
-    }
-
-    public static ZyObject tanimla(ZyStack stack)
-            throws ZyStackUnderflowError, ZyTypeError {
-        List<ZyObject> arg = stack.getArgument(2);
-
-        if (!(arg.get(1) instanceof ZyName)) {
-            throw new ZyTypeError("İsim tanımlamak için ilk argümanın 'isim'"
-                    + " tipinde olması gerekir. Fakat şu anki durumda '"
-                    + arg.get(1).getType() + "' tipinde", SourceMap.getLineOf(arg.get(0)));
-        }
-
-        ZyObject eklenecekNesne = arg.get(0);
-        ZyName eklenecekIsim = (ZyName) arg.get(1);
-        ZySymbolStack.INSTANCE.addName(eklenecekIsim, eklenecekNesne);
         return new ZyEmpty();
     }
 

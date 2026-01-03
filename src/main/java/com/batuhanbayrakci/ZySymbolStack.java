@@ -32,6 +32,9 @@ public class ZySymbolStack extends Stack<ZySymbolTable> {
      * nesnesi
      */
     public void addName(ZyName nameToAdd, ZyObject objectToAdd) {
+        if (isEmpty()) {
+            add(new ZySymbolTable());
+        }
         lastElement().put(nameToAdd, objectToAdd);
     }
 

@@ -33,12 +33,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("oku", ZyStack.class));
             systemFunctions.put("sembolT",
                     BuiltIn.class.getDeclaredMethod("sembolGoruntule", ZyStack.class));
-            systemFunctions.put("cikar",
-                    BuiltIn.class.getDeclaredMethod("elemanCikar", ZyStack.class));
-            systemFunctions.put("cift",
-                    BuiltIn.class.getDeclaredMethod("elemanCiftle", ZyStack.class));
-            systemFunctions.put("t",
-                    BuiltIn.class.getDeclaredMethod("tanimla", ZyStack.class));
             systemFunctions.put("gd",
                     BuiltIn.class.getDeclaredMethod("isimDegistir", ZyStack.class));
             systemFunctions.put("tip",
