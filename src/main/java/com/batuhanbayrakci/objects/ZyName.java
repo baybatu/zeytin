@@ -2,10 +2,8 @@ package com.batuhanbayrakci.objects;
 
 import com.batuhanbayrakci.ZyStack;
 import com.batuhanbayrakci.ZySymbolStack;
-import com.batuhanbayrakci.ZySystemTable;
 import com.batuhanbayrakci.exception.ZyError;
 import com.batuhanbayrakci.exception.ZyNameError;
-import com.batuhanbayrakci.modules.BuiltIn;
 import com.batuhanbayrakci.modules.namefunctions.Define;
 import com.batuhanbayrakci.modules.namefunctions.Dip;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
@@ -39,8 +37,6 @@ import com.batuhanbayrakci.modules.namefunctions.WhileLoop;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -172,23 +168,11 @@ public class ZyName extends ZyObject<String> {
         ZyObject<?> objectForExecution = ZySymbolStack.INSTANCE.findName(this);
 
         if (objectForExecution == null) {
-            Method met = ZySystemTable.INSTANCE.findName(getValue());
-            if (met == null) {
-                var nameFunction = findNameFunction(getValue());
-                if (nameFunction.isEmpty()) {
-                    throw new ZyNameError("\"" + this.getValue() + "\"" + " ismi bulunamadı.", SourceMap.getLineOf(this));
-                }
-                nameFunction.get().process(stack);
-            } else {
-                try {
-                    met.invoke(BuiltIn.class, stack);
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    Throwable th = e.getTargetException();
-                    throw (ZyError) th;
-                }
+            var nameFunction = findNameFunction(getValue());
+            if (nameFunction.isEmpty()) {
+                throw new ZyNameError("\"" + this.getValue() + "\"" + " ismi bulunamadı.", SourceMap.getLineOf(this));
             }
+            nameFunction.get().process(stack);
         } else {
             objectForExecution.execute(stack);
         }
