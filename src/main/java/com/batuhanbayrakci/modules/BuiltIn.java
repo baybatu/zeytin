@@ -118,13 +118,6 @@ public class BuiltIn {
         return new ZyEmpty();
     }
 
-    public static ZyObject calis(ZyStack stack) throws ZyError {
-        ZyObject arg = stack.getArgument();
-
-        arg.execute(stack);
-        return new ZyEmpty();
-    }
-
     public static ZyObject tip(ZyStack stack) throws ZyStackUnderflowError {
         ZyObject arg = stack.getArgument();
         return new ZyType(arg);
