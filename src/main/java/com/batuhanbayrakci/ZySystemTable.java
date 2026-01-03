@@ -35,10 +35,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("isimDegistir", ZyStack.class));
             systemFunctions.put("tip",
                     BuiltIn.class.getDeclaredMethod("tip", ZyStack.class));
-            systemFunctions.put("d",
-                    BuiltIn.class.getDeclaredMethod("dogru", ZyStack.class));
-            systemFunctions.put("y",
-                    BuiltIn.class.getDeclaredMethod("yanlis", ZyStack.class));
             systemFunctions.put("al",
                     BuiltIn.class.getDeclaredMethod("dizgeElemanCek", ZyStack.class));
             systemFunctions.put("li",

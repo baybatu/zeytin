@@ -9,6 +9,7 @@ import com.batuhanbayrakci.modules.BuiltIn;
 import com.batuhanbayrakci.modules.namefunctions.Define;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
+import com.batuhanbayrakci.modules.namefunctions.False;
 import com.batuhanbayrakci.modules.namefunctions.If;
 import com.batuhanbayrakci.modules.namefunctions.Length;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
@@ -16,6 +17,7 @@ import com.batuhanbayrakci.modules.namefunctions.Mod;
 import com.batuhanbayrakci.modules.namefunctions.Pop;
 import com.batuhanbayrakci.modules.namefunctions.StackSize;
 import com.batuhanbayrakci.modules.namefunctions.Swap;
+import com.batuhanbayrakci.modules.namefunctions.True;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
@@ -62,6 +64,8 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("t", new Define());
         systemNameFunctions.put("uzunluk", new Length());
         systemNameFunctions.put("kaç", new StackSize());
+        systemNameFunctions.put("d", new True());
+        systemNameFunctions.put("y", new False());
     }
 
     /**

@@ -85,14 +85,6 @@ public class BuiltIn {
         return new ZyType(arg);
     }
 
-    public static void dogru(ZyStack stack) {
-        stack.add(new ZyBoolean(true));
-    }
-
-    public static void yanlis(ZyStack stack) {
-        stack.add(new ZyBoolean(false));
-    }
-
     public static ZyObject dizgeElemanCek(ZyStack stack)
             throws ZyStackUnderflowError, ZyTypeError, ZyIndexBoundError {
         ZyObject argIndis = stack.getArgument();
