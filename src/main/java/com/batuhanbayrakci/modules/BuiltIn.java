@@ -509,18 +509,4 @@ public class BuiltIn {
         return new ZyEmpty();
 
     }
-
-    /**
-     * dip gerçekleştirimi
-     */
-    public static ZyObject dip(ZyStack stack)
-            throws ZyError {
-        List<ZyObject> arg = stack.getArgument(2);
-
-        ZyObject saklanacakNesne = arg.get(1);
-        arg.get(0).execute(stack);
-
-        stack.add(saklanacakNesne);
-        return new ZyEmpty();
-    }
 }

@@ -57,8 +57,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("surece", ZyStack.class));
             systemFunctions.put("yuru",
                     BuiltIn.class.getDeclaredMethod("yuru", ZyStack.class));
-            systemFunctions.put("dip",
-                    BuiltIn.class.getDeclaredMethod("dip", ZyStack.class));
 
         } catch (SecurityException | NoSuchMethodException e) {
             e.printStackTrace();

@@ -7,6 +7,7 @@ import com.batuhanbayrakci.exception.ZyError;
 import com.batuhanbayrakci.exception.ZyNameError;
 import com.batuhanbayrakci.modules.BuiltIn;
 import com.batuhanbayrakci.modules.namefunctions.Define;
+import com.batuhanbayrakci.modules.namefunctions.Dip;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
 import com.batuhanbayrakci.modules.namefunctions.False;
@@ -66,6 +67,7 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("kaç", new StackSize());
         systemNameFunctions.put("d", new True());
         systemNameFunctions.put("y", new False());
+        systemNameFunctions.put("dip", new Dip());
     }
 
     /**
