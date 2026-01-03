@@ -11,14 +11,31 @@ import com.batuhanbayrakci.modules.namefunctions.Dip;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
 import com.batuhanbayrakci.modules.namefunctions.False;
+import com.batuhanbayrakci.modules.namefunctions.ForLoop;
 import com.batuhanbayrakci.modules.namefunctions.If;
 import com.batuhanbayrakci.modules.namefunctions.Length;
+import com.batuhanbayrakci.modules.namefunctions.ListAdd;
+import com.batuhanbayrakci.modules.namefunctions.ListElement;
+import com.batuhanbayrakci.modules.namefunctions.ListSet;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
 import com.batuhanbayrakci.modules.namefunctions.Mod;
 import com.batuhanbayrakci.modules.namefunctions.Pop;
+import com.batuhanbayrakci.modules.namefunctions.Print;
+import com.batuhanbayrakci.modules.namefunctions.Read;
+import com.batuhanbayrakci.modules.namefunctions.Rename;
 import com.batuhanbayrakci.modules.namefunctions.StackSize;
+import com.batuhanbayrakci.modules.namefunctions.StackView;
+import com.batuhanbayrakci.modules.namefunctions.StringElement;
 import com.batuhanbayrakci.modules.namefunctions.Swap;
+import com.batuhanbayrakci.modules.namefunctions.SymbolView;
+import com.batuhanbayrakci.modules.namefunctions.ToBoolean;
+import com.batuhanbayrakci.modules.namefunctions.ToList;
+import com.batuhanbayrakci.modules.namefunctions.ToName;
+import com.batuhanbayrakci.modules.namefunctions.ToNumber;
+import com.batuhanbayrakci.modules.namefunctions.ToString;
 import com.batuhanbayrakci.modules.namefunctions.True;
+import com.batuhanbayrakci.modules.namefunctions.Type;
+import com.batuhanbayrakci.modules.namefunctions.WhileLoop;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
@@ -68,6 +85,23 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("d", new True());
         systemNameFunctions.put("y", new False());
         systemNameFunctions.put("dip", new Dip());
+        systemNameFunctions.put("_", new StackView());
+        systemNameFunctions.put("sembolT", new SymbolView());
+        systemNameFunctions.put("yaz", new Print());
+        systemNameFunctions.put("oku", new Read());
+        systemNameFunctions.put("gd", new Rename());
+        systemNameFunctions.put("tip", new Type());
+        systemNameFunctions.put("al", new StringElement());
+        systemNameFunctions.put("li", new ListElement());
+        systemNameFunctions.put("ekle", new ListAdd());
+        systemNameFunctions.put("değiştir", new ListSet());
+        systemNameFunctions.put("sayi", new ToNumber());
+        systemNameFunctions.put("dizge", new ToString());
+        systemNameFunctions.put("dogruluk", new ToBoolean());
+        systemNameFunctions.put("isim", new ToName());
+        systemNameFunctions.put("liste", new ToList());
+        systemNameFunctions.put("surece", new WhileLoop());
+        systemNameFunctions.put("yuru", new ForLoop());
     }
 
     /**
