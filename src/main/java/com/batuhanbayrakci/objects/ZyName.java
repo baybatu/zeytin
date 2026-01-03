@@ -8,6 +8,8 @@ import com.batuhanbayrakci.exception.ZyNameError;
 import com.batuhanbayrakci.modules.BuiltIn;
 import com.batuhanbayrakci.modules.namefunctions.If;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
+import com.batuhanbayrakci.modules.namefunctions.Mod;
+import com.batuhanbayrakci.modules.namefunctions.Swap;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
@@ -37,7 +39,18 @@ import java.util.Optional;
 public class ZyName extends ZyObject<String> {
 
     private final boolean executable;
-    private final Map<String, ZyNameFunction> systemNameFunctions = new HashMap<>();
+    private static final Map<String, ZyNameFunction> systemNameFunctions = new HashMap<>();
+
+    static {
+        loadSystemNameFunctions();
+    }
+
+    private static void loadSystemNameFunctions() {
+        systemNameFunctions.put("eger", new If());
+        systemNameFunctions.put("tekrarla", new Loop());
+        systemNameFunctions.put("mod", new Mod());
+        systemNameFunctions.put("yd", new Swap());
+    }
 
     /**
      * ZyIsim türünde bir isim nesnesi oluşturur.
@@ -50,7 +63,6 @@ public class ZyName extends ZyObject<String> {
     private ZyName(String value, boolean executable) {
         super(value);
         this.executable = executable;
-        loadSystemNameFunctions();
     }
 
     public static ZyName createExecutable(String value) {
@@ -59,11 +71,6 @@ public class ZyName extends ZyObject<String> {
 
     public static ZyName createLiteral(String value) {
         return new ZyName(value, false);
-    }
-
-    private void loadSystemNameFunctions() {
-        systemNameFunctions.put("eger", new If());
-        systemNameFunctions.put("tekrarla", new Loop());
     }
 
     public Optional<ZyNameFunction> findNameFunction(String name) {

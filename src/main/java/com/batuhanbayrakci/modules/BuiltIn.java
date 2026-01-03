@@ -2,7 +2,6 @@ package com.batuhanbayrakci.modules;
 
 import com.batuhanbayrakci.ZyStack;
 import com.batuhanbayrakci.ZySymbolStack;
-import com.batuhanbayrakci.exception.ZyDivisionByZeroError;
 import com.batuhanbayrakci.exception.ZyError;
 import com.batuhanbayrakci.exception.ZyIndexBoundError;
 import com.batuhanbayrakci.exception.ZyNameError;
@@ -28,25 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BuiltIn {
-
-    public static ZyObject mod(ZyStack stack) throws ZyDivisionByZeroError,
-            ZyStackUnderflowError, ZyTypeError {
-        List<ZyObject> arg = stack.getArgument(2);
-
-        if (!arg.get(0).getClass().isAssignableFrom(arg.get(1).getClass())) {
-            throw new ZyTypeError("\"mod\" operatörü '"
-                    + arg.get(1).getType() + "' ile '" + arg.get(0).getType()
-                    + "' tipleri arası işlemleri desteklemez", SourceMap.getLineOf(arg.get(0)));
-        } else {
-            if (arg.get(0) instanceof ZyNumber) {
-                return new ZyNumber((Double) arg.get(1).getValue()
-                        % (Double) arg.get(0).getValue());
-            } else {
-                throw new ZyTypeError("'" + arg.get(0).getType()
-                        + "' tipi, \"mod\" operatörünü desteklemez", SourceMap.getLineOf(arg.get(0)));
-            }
-        }
-    }
 
     public static ZyObject yiginGoruntule(ZyStack stack) {
         System.out.println("Yığın: " + stack);
@@ -506,15 +486,6 @@ public class BuiltIn {
             throw new ZyTypeError("'" + arg.getType() + "' nesneleri 'isim' tipine " +
                     "dönüştürülemezler.", SourceMap.getLineOf(arg));
         }
-    }
-
-    public static ZyObject elemanYerDegistir(ZyStack stack)
-            throws ZyStackUnderflowError {
-        List<ZyObject> arg = stack.getArgument(2);
-        stack.add(arg.get(0));
-        stack.add(arg.get(1));
-
-        return new ZyEmpty();
     }
 
     /**

@@ -23,8 +23,6 @@ public class ZySystemTable {
 
     private void loadSystemOperators() {
         try {
-            systemFunctions.put("mod",
-                    BuiltIn.class.getDeclaredMethod("mod", ZyStack.class));
             systemFunctions.put("_",
                     BuiltIn.class.getDeclaredMethod("yiginGoruntule", ZyStack.class));
             systemFunctions.put("kaç",
@@ -71,8 +69,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("isim", ZyStack.class));
             systemFunctions.put("liste",
                     BuiltIn.class.getDeclaredMethod("liste", ZyStack.class));
-            systemFunctions.put("yd",
-                    BuiltIn.class.getDeclaredMethod("elemanYerDegistir", ZyStack.class));
             systemFunctions.put("surece",
                     BuiltIn.class.getDeclaredMethod("surece", ZyStack.class));
             systemFunctions.put("yuru",

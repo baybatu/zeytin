@@ -21,14 +21,13 @@ import java.util.Optional;
 
 public class ZyOperator extends ZyObject<String> {
 
-    private final Map<String, ZyOperatorFunction> systemOperatorFunctions = new HashMap<>();
+    private static final Map<String, ZyOperatorFunction> systemOperatorFunctions = new HashMap<>();
 
-    public ZyOperator(String value) {
-        super(value);
+    static {
         loadSystemOperatorFunctions();
     }
 
-    private void loadSystemOperatorFunctions() {
+    private static void loadSystemOperatorFunctions() {
         systemOperatorFunctions.put("+", new PlusOperator());
         systemOperatorFunctions.put("-", new MinusOperator());
         systemOperatorFunctions.put("*", new MultiplyOperator());
@@ -40,6 +39,10 @@ public class ZyOperator extends ZyObject<String> {
         systemOperatorFunctions.put("<=", new LessThanOrEqualOperator());
         systemOperatorFunctions.put(">", new GreaterThanOperator());
         systemOperatorFunctions.put(">=", new GreaterThanOrEqualOperator());
+    }
+
+    public ZyOperator(String value) {
+        super(value);
     }
 
     public Optional<ZyOperatorFunction> findOperatorFunction(String name) {
