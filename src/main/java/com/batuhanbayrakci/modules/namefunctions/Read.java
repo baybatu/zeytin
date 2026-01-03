@@ -27,7 +27,6 @@ public class Read implements ZyNameFunction {
 
     @Override
     public void process(ZyStack stack) throws ZyStackUnderflowError, ZyTypeError {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String read;
         try {
             read = reader.readLine();
