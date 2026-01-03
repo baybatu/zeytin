@@ -14,6 +14,7 @@ import com.batuhanbayrakci.modules.namefunctions.Length;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
 import com.batuhanbayrakci.modules.namefunctions.Mod;
 import com.batuhanbayrakci.modules.namefunctions.Pop;
+import com.batuhanbayrakci.modules.namefunctions.StackSize;
 import com.batuhanbayrakci.modules.namefunctions.Swap;
 import com.batuhanbayrakci.modules.namefunctions.ZyNameFunction;
 import com.batuhanbayrakci.sourcemap.SourceMap;
@@ -60,6 +61,7 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("cift", new Dup());
         systemNameFunctions.put("t", new Define());
         systemNameFunctions.put("uzunluk", new Length());
+        systemNameFunctions.put("kaç", new StackSize());
     }
 
     /**

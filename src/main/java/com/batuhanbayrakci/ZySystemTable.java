@@ -25,8 +25,6 @@ public class ZySystemTable {
         try {
             systemFunctions.put("_",
                     BuiltIn.class.getDeclaredMethod("yiginGoruntule", ZyStack.class));
-            systemFunctions.put("kaç",
-                    BuiltIn.class.getDeclaredMethod("yiginElemanSayisi", ZyStack.class));
             systemFunctions.put("yaz",
                     BuiltIn.class.getDeclaredMethod("yazdir", ZyStack.class));
             systemFunctions.put("oku",

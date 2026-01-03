@@ -32,10 +32,6 @@ public class BuiltIn {
         return new ZyEmpty();
     }
 
-    public static ZyObject yiginElemanSayisi(ZyStack stack) {
-        return new ZyNumber(stack.size());
-    }
-
     public static ZyObject sembolGoruntule(ZyStack stack) {
         System.out.println("Sembol stacki: " + ZySymbolStack.INSTANCE);
         return new ZyEmpty();
