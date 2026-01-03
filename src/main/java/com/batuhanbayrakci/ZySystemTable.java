@@ -43,8 +43,6 @@ public class ZySystemTable {
                     BuiltIn.class.getDeclaredMethod("yanlis", ZyStack.class));
             systemFunctions.put("al",
                     BuiltIn.class.getDeclaredMethod("dizgeElemanCek", ZyStack.class));
-            systemFunctions.put("uzunluk",
-                    BuiltIn.class.getDeclaredMethod("uzunluk", ZyStack.class));
             systemFunctions.put("li",
                     BuiltIn.class.getDeclaredMethod("listeElemanCek", ZyStack.class));
             systemFunctions.put("ekle",

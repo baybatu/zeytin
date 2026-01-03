@@ -10,6 +10,7 @@ import com.batuhanbayrakci.modules.namefunctions.Define;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
 import com.batuhanbayrakci.modules.namefunctions.If;
+import com.batuhanbayrakci.modules.namefunctions.Length;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
 import com.batuhanbayrakci.modules.namefunctions.Mod;
 import com.batuhanbayrakci.modules.namefunctions.Pop;
@@ -58,6 +59,7 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("cikar", new Pop());
         systemNameFunctions.put("cift", new Dup());
         systemNameFunctions.put("t", new Define());
+        systemNameFunctions.put("uzunluk", new Length());
     }
 
     /**

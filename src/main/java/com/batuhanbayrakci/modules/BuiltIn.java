@@ -128,24 +128,6 @@ public class BuiltIn {
         return eleman;
     }
 
-    public static void uzunluk(ZyStack stack)
-            throws ZyStackUnderflowError, ZyTypeError, ZyIndexBoundError {
-        ZyObject arg = stack.getArgument();
-
-        if (!(arg instanceof ZyString) && !(arg instanceof ZyList)) {
-            throw new ZyTypeError("'" + arg.getType()
-                    + "' tipi, uzunluk hesabı için geçersiz argüman tipidir.", SourceMap.getLineOf(arg));
-        }
-
-        if (arg instanceof ZyString) {
-            ZyString tumDizge = (ZyString) arg;
-            stack.add(new ZyNumber(tumDizge.length()));
-        } else {
-            ZyList liste = (ZyList) arg;
-            stack.add(new ZyNumber(liste.size()));
-        }
-    }
-
     public static ZyObject listeElemanCek(ZyStack stack)
             throws ZyStackUnderflowError, ZyTypeError, ZyIndexBoundError {
         ZyObject argIndis = stack.getArgument();
