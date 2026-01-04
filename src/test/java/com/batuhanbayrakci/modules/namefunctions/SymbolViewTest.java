@@ -29,7 +29,7 @@ public class SymbolViewTest {
     public void shouldPrintSymbolStack() {
         symbolViewFunction.process(stack);
         
-        assertThat(outputStream.toString()).contains("Sembol stacki:");
+        assertThat(outputStream.toString()).contains("Sembol Yığını:");
         
         System.setOut(originalOut);
     }
