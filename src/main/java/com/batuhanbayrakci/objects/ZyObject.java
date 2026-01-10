@@ -3,8 +3,6 @@ package com.batuhanbayrakci.objects;
 import com.batuhanbayrakci.ZyStack;
 import com.batuhanbayrakci.exception.ZyError;
 
-import java.util.Stack;
-
 public abstract class ZyObject<T> {
 
     private T value;
@@ -23,10 +21,9 @@ public abstract class ZyObject<T> {
         process(stack);
     }
 
-    //todo:batu:remove
-    @Deprecated
     public void add(ZyObject zn) {
-        ((Stack<ZyObject>) this.value).add(zn);
+        //noop
+        //Container objects have own implementations such as in ZyList and ZyProcedure
     }
 
     public T getValue() {

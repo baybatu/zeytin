@@ -9,6 +9,7 @@ import com.batuhanbayrakci.modules.namefunctions.Dip;
 import com.batuhanbayrakci.modules.namefunctions.Dup;
 import com.batuhanbayrakci.modules.namefunctions.Execute;
 import com.batuhanbayrakci.modules.namefunctions.False;
+import com.batuhanbayrakci.modules.namefunctions.FilterFn;
 import com.batuhanbayrakci.modules.namefunctions.ForLoop;
 import com.batuhanbayrakci.modules.namefunctions.If;
 import com.batuhanbayrakci.modules.namefunctions.Length;
@@ -16,6 +17,7 @@ import com.batuhanbayrakci.modules.namefunctions.ListAdd;
 import com.batuhanbayrakci.modules.namefunctions.ListElement;
 import com.batuhanbayrakci.modules.namefunctions.ListSet;
 import com.batuhanbayrakci.modules.namefunctions.Loop;
+import com.batuhanbayrakci.modules.namefunctions.MapFn;
 import com.batuhanbayrakci.modules.namefunctions.Mod;
 import com.batuhanbayrakci.modules.namefunctions.Pop;
 import com.batuhanbayrakci.modules.namefunctions.Print;
@@ -98,6 +100,8 @@ public class ZyName extends ZyObject<String> {
         systemNameFunctions.put("liste", new ToList());
         systemNameFunctions.put("surece", new WhileLoop());
         systemNameFunctions.put("yuru", new ForLoop());
+        systemNameFunctions.put("uygula", new MapFn());
+        systemNameFunctions.put("filtrele", new FilterFn());
     }
 
     /**

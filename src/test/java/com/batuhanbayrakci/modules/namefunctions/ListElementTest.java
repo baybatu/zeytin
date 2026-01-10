@@ -38,8 +38,9 @@ public class ListElementTest {
 
         listElementFunction.process(stack);
 
-        assertThat(stack).hasSize(1);
+        assertThat(stack).hasSize(2);
         assertThat(stack.pop()).isEqualTo(new ZyNumber(10));
+        assertThat(stack.pop()).isEqualTo(liste);
     }
 
     @Test
@@ -54,8 +55,9 @@ public class ListElementTest {
 
         listElementFunction.process(stack);
 
-        assertThat(stack).hasSize(1);
+        assertThat(stack).hasSize(2);
         assertThat(stack.pop()).isEqualTo(new ZyString("b"));
+        assertThat(stack.pop()).isEqualTo(liste);
     }
 
     @Test
@@ -70,8 +72,9 @@ public class ListElementTest {
 
         listElementFunction.process(stack);
 
-        assertThat(stack).hasSize(1);
+        assertThat(stack).hasSize(2);
         assertThat(stack.pop()).isEqualTo(new ZyNumber(3));
+        assertThat(stack.pop()).isEqualTo(liste);
     }
 
     @Test

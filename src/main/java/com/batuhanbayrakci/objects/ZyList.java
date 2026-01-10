@@ -35,7 +35,6 @@ public class ZyList extends ZyObject<List<ZyObject<?>>> {
 
     public ZyList(List<ZyObject<?>> value) {
         super(value);
-        getValue().addAll(value);
     }
 
     @Override

@@ -42,6 +42,7 @@ public class ListElement implements ZyNameFunction {
         }
 
         ZyObject alinanNesne = tumListe.getValue().get(i_indis);
+        stack.push(argNesne);
         stack.push(alinanNesne);
     }
 }

@@ -3,7 +3,9 @@ package com.batuhanbayrakci;
 import com.batuhanbayrakci.exception.ZyStackUnderflowError;
 import com.batuhanbayrakci.exception.ZyTypeError;
 import com.batuhanbayrakci.objects.ZyBoolean;
+import com.batuhanbayrakci.objects.ZyList;
 import com.batuhanbayrakci.objects.ZyObject;
+import com.batuhanbayrakci.objects.ZyProcedure;
 import com.batuhanbayrakci.sourcemap.SourceMap;
 
 import java.util.ArrayList;
@@ -16,6 +18,22 @@ public class ZyStack extends Stack<ZyObject<?>> {
         ZyObject obj = getArgument();
         if (obj instanceof ZyBoolean) {
             return (ZyBoolean) obj;
+        }
+        throw new ZyTypeError("Type error", SourceMap.getLineOf(obj));
+    }
+
+    public ZyProcedure getProcedureArgument() {
+        ZyObject obj = getArgument();
+        if (obj instanceof ZyProcedure) {
+            return (ZyProcedure) obj;
+        }
+        throw new ZyTypeError("Type error", SourceMap.getLineOf(obj));
+    }
+
+    public ZyList getListArgument() {
+        ZyObject obj = getArgument();
+        if (obj instanceof ZyList) {
+            return (ZyList) obj;
         }
         throw new ZyTypeError("Type error", SourceMap.getLineOf(obj));
     }
